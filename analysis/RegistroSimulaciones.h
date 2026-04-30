@@ -4,11 +4,12 @@
 class RegistroSimulaciones{
 private:
     double ValorFinal;
+    double rendimiento;
 public:
-    RegistroSimulaciones(double Vf);
+    RegistroSimulaciones(double Vi, double Vf);
     ~RegistroSimulaciones();
 
-    double retorno(double Vi) const;
+    double retorno() const;
     double vf() const;
 };
 
