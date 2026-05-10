@@ -5,19 +5,18 @@
 #include "RegistroSimulaciones.h"
 #include <vector>
 
-using namespace std;
 
 class AnalizadorPortafolio{
 private:
-    vector<RegistroSimulaciones> Resultados;    // de todas las simulaciones
+    std::vector<RegistroSimulaciones> Resultados;    // de todas las simulaciones
     double tasaLibreRiesgo;
 public:
-    AnalizadorPortafolio(const vector<RegistroSimulaciones>& results, double rf);
+    AnalizadorPortafolio(const std::vector<RegistroSimulaciones>& results, double rf);
     ~AnalizadorPortafolio();
 
-    double retornoMedio() const;
-    double volatilidad() const;
-    double sharpeRatio() const;
+    std::vector<double> retornoMedio() const;
+    std::vector<double> volatilidad() const;
+    std::vector<double> sharpeRatio() const;
     //double var(double nivelConfianza) const;        // ej. 0.95
     //double cvar(double nivelConfianza) const;
     void imprimirReporte() const;

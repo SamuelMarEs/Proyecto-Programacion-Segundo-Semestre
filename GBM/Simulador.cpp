@@ -2,14 +2,14 @@
 #include "Cholesky.h"
 #include <cmath>
 
-std::vector<std::vector<std::vector<double>>> 
+std::vector<std::vector<double>>
 SimuladorMonteCarlo::simular(
     const Portafolio& portafolio,
-    int numSimulaciones,
     double T,
     int steps
 ) {
-    std::vector<std::vector<std::vector<double>>> resultados;
+    int numSimulaciones = 1;
+    
 
     double dt = T / steps;
 
@@ -24,43 +24,39 @@ SimuladorMonteCarlo::simular(
 
     auto L = Cholesky::descomponer(corr);
 
-    for (int sim = 0; sim < numSimulaciones; sim++) {
+    std::vector<double> precios(n);
 
-        std::vector<double> precios(n);
-
-        // Inicializar precios
-        for (int i = 0; i < n; i++) {
+    // Inicializar precios
+    for (int i = 0; i < n; i++) {
             precios[i] = activos[i].getPrecioInicial();
         }
 
-        std::vector<std::vector<double>> trayectoria;
-        trayectoria.push_back(precios); // t = 0
+    std::vector<std::vector<double>> trayectoria;
+    trayectoria.push_back(precios); // t = 0
 
-        for (int t = 0; t < steps; t++) {
 
-            std::vector<double> Z(n);
-            for (int i = 0; i < n; i++) {
+    for (int t = 0; t < steps; t++) {
+
+        std::vector<double> Z(n);
+        for (int i = 0; i < n; i++) {
                 Z[i] = rng.normal();
             }
 
-            std::vector<double> Z_corr = Cholesky::multiplicar(L, Z);
+        std::vector<double> Z_corr = Cholesky::multiplicar(L, Z);
 
-            for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
 
-                double mu = activos[i].getMu();
-                double sigma = activos[i].getSigma();
+            double mu = activos[i].getMu();
+            double sigma = activos[i].getSigma();
 
-                double drift = (mu - 0.5 * sigma * sigma) * dt;
-                double diffusion = sigma * std::sqrt(dt) * Z_corr[i];
+            double drift = (mu - 0.5 * sigma * sigma) * dt;
+            double diffusion = sigma * std::sqrt(dt) * Z_corr[i];
 
-                precios[i] *= std::exp(drift + diffusion);
+            precios[i] *= std::exp(drift + diffusion);
             }
 
             trayectoria.push_back(precios);
         }
 
-        resultados.push_back(trayectoria);
-    }
-
-    return resultados;
+    return trayectoria;
 }
