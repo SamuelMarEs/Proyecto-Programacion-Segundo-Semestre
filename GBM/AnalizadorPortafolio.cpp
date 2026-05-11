@@ -27,15 +27,15 @@ std::vector<double> AnalizadorPortafolio::retornoMedio() const {
 
 std::vector<double> AnalizadorPortafolio::volatilidad() const {
     std::vector<double> mu = retornoMedio();                         // Media por activo
-    std::vector<double> std(mu.size());                                    // Desiación estándar
+    std::vector<double> vol(mu.size());                                    // Desiación estándar
     for(int i = 0; i < mu.size(); i++){
         for (int k = 0; k < Resultados.size(); k++){
-            std[i] += (Resultados[k].retorno()[i] - mu[i])*(Resultados[k].vf()[i] - mu[i]);
+            vol[i] += ((Resultados[k].retorno()[i] - mu[i])*(Resultados[k].retorno()[i] - mu[i]));
         }
-        std[i] = sqrt(std[i]/Resultados.size());
+        vol[i] = sqrt(vol[i]);
     }
 
-    return std;                                                             // Volatilidad promedio por activo
+    return vol;                                                             // Volatilidad promedio por activo
 };
 
 std::vector<double> AnalizadorPortafolio::sharpeRatio() const {
@@ -78,18 +78,18 @@ void AnalizadorPortafolio::imprimirReporte() const {
     std::cout << "===Resumen de resultados===" << std::endl;
     std::cout << "Retorno medio anual: ";
     for (int i = 0; i < retorno.size(); i++){
-        std::cout << retorno[i] << "%\n";
+        std::cout << retorno[i] << "%  ";
     }
     std::cout << std::endl;
     std::cout << "Volatilidad anual: ";
     for (int i = 0; i < vol.size(); i++){
-        std::cout << vol[i] << "%\n";
+        std::cout << vol[i] << "%  ";
     }
     std::cout << std::endl;
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "Sharpe ratio anual: ";
     for (int i = 0; i < s_ratio.size(); i++){
-        std::cout << s_ratio[i] << "%\n";
+        std::cout << s_ratio[i] << "%  ";
     }
     std::cout << std::endl;
     

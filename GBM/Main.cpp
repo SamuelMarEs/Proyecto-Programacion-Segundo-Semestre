@@ -100,9 +100,8 @@ int main() {
     // Simulaciones:
     std::vector<vector<double>> promediosDiarios(steps, std::vector<double>(n, 0));
     std::vector<RegistroSimulaciones> simulaciones;
-
+    SimuladorMonteCarlo simulador;
     for (int i = 0; i < numSim; i++){
-        SimuladorMonteCarlo simulador;
         auto trayectoria = simulador.simular(portafolio, T, steps);
 
         // Guardar un vector con el promedio diario de todas las simulaciones
@@ -157,8 +156,9 @@ int main() {
     double tasaLibreRiesgo = 0.08;
     AnalizadorPortafolio analisis(simulaciones, tasaLibreRiesgo);
 
-    //analisis.imprimirReporte();
+    analisis.imprimirReporte();
 
+    /*
     for (int i = 0; i < simulaciones.size(); i++){
         std::vector<double> retornos = simulaciones[i].vf();
         for (int k = 0; k < retornos.size(); k++){
@@ -166,6 +166,7 @@ int main() {
         }
         std::cout << std::endl;
     }
+    */
     
 
     return 0;
