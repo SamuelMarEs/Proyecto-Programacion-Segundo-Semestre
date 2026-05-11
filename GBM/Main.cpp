@@ -157,7 +157,15 @@ int main() {
     double tasaLibreRiesgo = 0.08;
     AnalizadorPortafolio analisis(simulaciones, tasaLibreRiesgo);
 
-    analisis.imprimirReporte();
+    //analisis.imprimirReporte();
+
+    for (int i = 0; i < simulaciones.size(); i++){
+        std::vector<double> retornos = simulaciones[i].vf();
+        for (int k = 0; k < retornos.size(); k++){
+            std::cout << retornos[k] << " ";
+        }
+        std::cout << std::endl;
+    }
     
 
     return 0;
