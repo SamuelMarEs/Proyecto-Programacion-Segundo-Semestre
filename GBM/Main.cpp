@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
+#include <fstream>
 #include "Activo.h"
 #include "Portafolio.h"
 #include "Simulador.h"
@@ -9,6 +10,27 @@
 
 
 using namespace std;
+
+void exportarCSV(const vector<Activo> activos, const vector<vector<double>> promediosDiarios, const vector<double> evolucionPortafolio){
+    ofstream csv("Resultados.csv");
+    csv << "Día,";
+    for (int i = 0; i < activos.size(); i++){
+        csv << activos[i].getNombre() << ",";
+    }
+    csv << "Portafolio";
+    csv << endl;
+
+    for (int i = 0; i < promediosDiarios.size(); i++){
+        csv << i << ",";
+        for (int k = 0; k < promediosDiarios[i].size(); k++){
+            csv << promediosDiarios[i][k] << ",";
+        }
+        csv << evolucionPortafolio[i];
+        csv << endl;
+    }
+
+    csv.close();
+};
 
 int main() {
 
@@ -200,6 +222,8 @@ int main() {
     AnalizadorPortafolio analisis(simulaciones, tasaLibreRiesgo);
 
     analisis.imprimirReporte();
+
+    exportarCSV(activos, promediosDiarios, evolucionPortafolio);
 
     return 0;
 }
