@@ -12,9 +12,22 @@ using namespace std;
 
 int main() {
 
-    int n = 3;
-    /*std::cout << "Numero de activos: ";
-    std::cin >> n;*/
+    int n;
+    int seguro1 = -1;
+    while (seguro1 != 0){
+        std::cout << "Numero de activos (máximo 6): ";
+        std::cin >> n;
+
+        if (n > 6){
+            std::cout << "El número de activos no debe ser mayor a 6, volver a intentar porfavor" << std::endl;
+        }
+        else if (n < 1){
+            std::cout << "Debe ingresar al menos 1 activo. Volver a intentar porfavor" << std::endl;
+        }
+        else {
+            seguro1 = 0;
+        }
+    }
 
     vector<Activo> activos;
     vector<double> pesos(n);
@@ -26,8 +39,11 @@ int main() {
     Activo Euro("Euro", 20.29, 0.05, 0.12);
     Activo Petro("Petroleo", 3000, 0.15, 0.4);
     // 🔹 Lectura de activos
+
+    vector<int> historialActivos;
+
     for (int i = 0; i < n; i++){
-        cout << "==========Elija activos en los que desea invertir y precione ENTER==========" << endl;
+        cout << "==========Elija uno de los activos en los que desea invertir y precione ENTER==========" << endl;
         cout << "(1) Oro, $2000" << endl;
         cout << "(2) SP500, $7600" << endl;
         cout << "(3) NVIDIA, $300" << endl;
@@ -36,6 +52,12 @@ int main() {
         cout << "(6) Petroleo, $3000" << endl;
         int opcion;
         cin >> opcion;
+        for (int k = 0; k < historialActivos.size(); k++){
+            if (historialActivos[k] == opcion){
+                opcion = 0;
+            }
+        }
+        historialActivos.push_back(opcion);
 
         if (opcion == 1){
             activos.emplace_back(Gold);
@@ -49,6 +71,9 @@ int main() {
             activos.emplace_back(Euro);
         } else if (opcion == 6){
             activos.emplace_back(Petro);
+        } else if (opcion == 0){
+            cout << "Opcion no válida. No puede ingresar el mismo activo más de una vez. Vuelva a intentar porfavor" << endl;
+            i -= 1;
         } else {
             cout << "Opcion no válida, elija otro activo porfavor" << endl;
             i -= 1;
@@ -58,10 +83,36 @@ int main() {
 
     // 🔹 Pesos
     std::cout << "\nPesos (suman 1):\n";
-    for (int i = 0; i < n; i++) {
-        std::cout << "Peso activo " << i + 1 << ": ";
-        std::cin >> pesos[i];
+
+    int seguro2 = -1;
+    while (seguro2 != 0){
+        double sum;
+        for (int i = 0; i < n; i++) {
+            double peso;
+            std::cout << "Peso activo " << i + 1 << ": ";
+            std::cin >> peso;
+            if (peso < 1 && peso >= 0){
+                pesos[i] = peso;
+            } else {
+                std::cout << "El peso de un activo no puede sobrepasar 1 ni ser negativo. Vuelva a intentar porfavor" << std::endl;
+                i -= 1;
+            }
+            sum += pesos[i];
+            if (sum > 1) {
+                std::cout << "La suma de los pesos de los activos no puede sobrepasar 1, vuelva a intentar porfavor" << std::endl;
+                sum -= pesos[i];
+                pesos[i] = 0;
+                i -= 1;
+            }
+        }
+        if (sum != 1){
+            std::cout << "Los pesos de los activos deben sumar 1, vuelva a intentar porfavor" << std::endl;
+            sum = 0;
+        } else {
+            seguro2 = 0;
+        }
     }
+    
 
     // 🔹 Capital
     double capital;
@@ -80,27 +131,20 @@ int main() {
     double T = 1;
 
     /*
-    std::cout << "\nNumero de simulaciones: ";
-    std::cin >> numSim;
-
     std::cout << "Horizonte T: ";
     std::cin >> T;
 
     std::cout << "Numero de pasos: ";
-    std::cin >> steps; */
-
-    // 🔹 Simulación
-    
-    //SimuladorMonteCarlo simulador;
-    //auto resultados = simulador.simular(portafolio, T, steps);
+    std::cin >> steps; 
+    */
 
     std::cout << std::fixed << std::setprecision(4);
-    
     
     // Simulaciones:
     std::vector<vector<double>> promediosDiarios(steps, std::vector<double>(n, 0));
     std::vector<RegistroSimulaciones> simulaciones;
     SimuladorMonteCarlo simulador;
+
     for (int i = 0; i < numSim; i++){
         auto trayectoria = simulador.simular(portafolio, T, steps);
 
@@ -113,7 +157,6 @@ int main() {
 
         simulaciones.push_back(RegistroSimulaciones(trayectoria[0], trayectoria.back()));
     }
-        
 
 
     // =====================================================
@@ -157,17 +200,6 @@ int main() {
     AnalizadorPortafolio analisis(simulaciones, tasaLibreRiesgo);
 
     analisis.imprimirReporte();
-
-    /*
-    for (int i = 0; i < simulaciones.size(); i++){
-        std::vector<double> retornos = simulaciones[i].vf();
-        for (int k = 0; k < retornos.size(); k++){
-            std::cout << retornos[k] << " ";
-        }
-        std::cout << std::endl;
-    }
-    */
-    
 
     return 0;
 }

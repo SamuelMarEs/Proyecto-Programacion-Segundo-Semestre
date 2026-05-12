@@ -32,7 +32,7 @@ std::vector<double> AnalizadorPortafolio::volatilidad() const {
         for (int k = 0; k < Resultados.size(); k++){
             vol[i] += ((Resultados[k].retorno()[i] - mu[i])*(Resultados[k].retorno()[i] - mu[i]));
         }
-        vol[i] = sqrt(vol[i]);
+        vol[i] = sqrt(vol[i]/Resultados.size());
     }
 
     return vol;                                                             // Volatilidad promedio por activo
