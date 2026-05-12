@@ -40,6 +40,12 @@ int main() {
         std::cout << "Numero de activos (máximo 6): ";
         std::cin >> n;
 
+        if (cin.fail()){
+            cin.clear();
+            cin.ignore(1000,'\n');
+            cout << "Entrada no válida" << endl;
+        }
+
         if (n > 6){
             std::cout << "El número de activos no debe ser mayor a 6, volver a intentar porfavor" << std::endl;
         }
@@ -81,6 +87,12 @@ int main() {
         }
         historialActivos.push_back(opcion);
 
+        if (cin.fail()){
+            cin.clear();
+            cin.ignore(1000,'\n');
+            cout << "Entrada no válida" << endl;
+        }
+
         if (opcion == 1){
             activos.emplace_back(Gold);
         } else if (opcion == 2){
@@ -113,6 +125,12 @@ int main() {
             double peso;
             std::cout << "Peso activo " << i + 1 << ": ";
             std::cin >> peso;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                cout << "Entrada no válida" << endl;
+                i -= 1;
+            }
             if (peso < 1 && peso >= 0){
                 pesos[i] = peso;
             } else {
@@ -138,13 +156,45 @@ int main() {
 
     // 🔹 Capital
     double capital;
-    std::cout << "\nCapital total: ";
-    std::cin >> capital;
+    while (true){
+        std::cout << "\nCapital total: ";
+        std::cin >> capital;
+
+        if (cin.fail()){
+            cin.clear();
+            cin.ignore(1000,'\n');
+            cout << "Entrada no válida" << endl;
+        } else if (capital <= 0){
+            cout << "Entrada no valida. El capital debe ser positivo" << endl;
+            continue;
+        }
+        else if (capital > 0){
+            cin.ignore(1000,'\n');
+            break;
+        }
+
+    }
+    
 
     // Número de simulaciones
     int numSim;
-    std::cout << "Ingrese número de simulaciones: ";
-    std::cin >> numSim;
+    while (true){
+        std::cout << "Ingrese número de simulaciones: ";
+        std::cin >> numSim;
+
+        if (cin.fail()){
+            cin.clear();
+            cin.ignore(1000,'\n');
+            cout << "Entrada no válida" << endl;
+        } else if (numSim <= 0){
+            cout << "Entrada no valida. Debe de realizarse al menos una simulación" << endl;
+            continue;
+        } else {
+            cin.ignore(1000,'\n');
+            break;
+        }
+    }
+    
 
     Portafolio portafolio(activos, pesos, capital);
 
