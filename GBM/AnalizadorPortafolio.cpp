@@ -3,7 +3,10 @@
 #include <iostream>
 #include <iomanip>
 
-
+/*
+Constructor
+Guarda el resultado final de cada simulacion
+*/
 AnalizadorPortafolio::AnalizadorPortafolio(const std::vector<RegistroSimulaciones>& results, double rf /*Tasa libre de riesgo*/){
     Resultados = results;
     tasaLibreRiesgo = rf;
@@ -11,6 +14,7 @@ AnalizadorPortafolio::AnalizadorPortafolio(const std::vector<RegistroSimulacione
 
 AnalizadorPortafolio::~AnalizadorPortafolio(){};
 
+// Calculo del retorno medio de cada activo
 std::vector<double> AnalizadorPortafolio::retornoMedio() const {
     // Regresa la media de los retornos finales de todas las simulaciones (por activo)
     std::vector<double> mean(Resultados[0].retorno().size());
@@ -25,8 +29,9 @@ std::vector<double> AnalizadorPortafolio::retornoMedio() const {
     return mean;
 };
 
+// Calculo de la volatilidad media de cada activo
 std::vector<double> AnalizadorPortafolio::volatilidad() const {
-    std::vector<double> mu = retornoMedio();                         // Media por activo
+    std::vector<double> mu = retornoMedio();                               // Media por activo
     std::vector<double> vol(mu.size());                                    // Desiación estándar
     for(int i = 0; i < mu.size(); i++){
         for (int k = 0; k < Resultados.size(); k++){
@@ -38,32 +43,30 @@ std::vector<double> AnalizadorPortafolio::volatilidad() const {
     return vol;                                                             // Volatilidad promedio por activo
 };
 
+// Calcula el sharpe ratio por activo
 std::vector<double> AnalizadorPortafolio::sharpeRatio() const {
     // Calcula y retorna el Sharpe Ratio PROMEDIO de todas las simulaciones
-    std::vector<double> Rf = retornoMedio();                 // Retorno final promedio de todas las simulaciones por activo
-    std::vector<double> sigma = volatilidad();               // Desviación estándar de los rendimientos (porcentuales) por activo
+    std::vector<double> Rf = retornoMedio();                               // Retorno final promedio de todas las simulaciones por activo
+    std::vector<double> sigma = volatilidad();                             // Desviación estándar de los rendimientos (porcentuales) por activo
     std::vector<double> shRatio(sigma.size());
 
     for (int i = 0; i < sigma.size(); i++){
-        shRatio[i] = (Rf[i] - tasaLibreRiesgo) / sigma[i];         // (retorno final - tasa libre de riesgo) / volatilidad
+        shRatio[i] = (Rf[i] - tasaLibreRiesgo) / sigma[i];                 // (retorno final - tasa libre de riesgo) / volatilidad
     }
 
     return shRatio;                                                 
 };
 
-//double AnalizadorPortafolio::var(double nivelConfianza) const{};
-
-//double AnalizadorPortafolio::cvar(double nivelConfianza) const{};
-
+// Imprime el retorno medio, volatilidad y sharpe ratio por activo
 void AnalizadorPortafolio::imprimirReporte() const {
-    // Volatilidad anual (%) por activo
+    // Guarda la volatilidad anual como porcentaje % por activo
     std::vector<double> sigma = volatilidad();            // Volatilidad por activo      
     std::vector<double> vol(sigma.size());
     for (int i = 0; i < vol.size(); i++){
         vol[i] = sigma[i] * 100;  
     }                         
 
-    // Retorno medio anual (%)
+    // Guarda el retorno medio anual como porcentaje % por activo
     std::vector<double> mu = retornoMedio();
     std::vector<double> retorno(mu.size());
     for (int i = 0; i < retorno.size(); i++){
@@ -77,19 +80,22 @@ void AnalizadorPortafolio::imprimirReporte() const {
 
     std::cout << "===Resumen de resultados===" << std::endl;
     std::cout << "Retorno medio anual: ";
+    // Imprime retorno medio por activo
     for (int i = 0; i < retorno.size(); i++){
         std::cout << retorno[i] << "%  ";
     }
     std::cout << std::endl;
     std::cout << "Volatilidad anual: ";
+    // Imprime volatilidad media por activo
     for (int i = 0; i < vol.size(); i++){
         std::cout << vol[i] << "%  ";
     }
     std::cout << std::endl;
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "Sharpe ratio anual: ";
+    // Imprime el sharpe ratio promeido por activo
     for (int i = 0; i < s_ratio.size(); i++){
-        std::cout << s_ratio[i] << "%  ";
+        std::cout << s_ratio[i];
     }
     std::cout << std::endl;
     
