@@ -5,16 +5,16 @@
 
 class Activo {
 private:
-    std::string nombre;
-    double precioInicial;
-    double mu;
-    double sigma;
+    std::string nombre; //Nombre del activo
+    double precioInicial;  //Precio inicial del activo
+    double mu; //Rendimiento esperado
+    double sigma; //Volatilidad del activo
 
 public:
-    Activo(const std::string& nombre,
-           double precioInicial,
-           double mu,
-           double sigma);
+    Activo(const std::string& nombre, //Nombre del activo
+           double precioInicial, //Precio inicial del activo
+           double mu, //Rendimiento esperado
+           double sigma); //Volatilidad del activo
 
     std::string getNombre() const;
     double getPrecioInicial() const;

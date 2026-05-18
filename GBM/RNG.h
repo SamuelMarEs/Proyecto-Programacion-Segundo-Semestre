@@ -5,12 +5,12 @@
 
 class RNG {
 private:
-    std::mt19937 gen;
-    std::normal_distribution<double> dist;
+    std::mt19937 gen; // Generador de números aleatorios Mersenne Twister
+    std::normal_distribution<double> dist; // Distribución normal
 
 public:
     RNG();
-    double normal();
+    double normal(); // Genera un número aleatorio con distribución normal
 };
 
 #endif
